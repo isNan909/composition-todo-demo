@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <section>
-      <input type="text" v-model="todo" />
+      <input type="text" v-model="state.todo" />
       <ul>
-        <li v-for="(todo, i) in todolist" :key="i">{{todo}}</li>
+        <li v-for="(todo, i) in state.todolist" :key="i">{{todo}}</li>
       </ul>
     </section>
     <button @click="addTodo">Add Todo</button>
@@ -11,23 +11,33 @@
 </template>
 
 <script>
+import { reactive, ref } from "@vue/composition-api";
 export default {
-  name: "app",
-  data() {
+  setup() {
+    const { state, addTodo } = useOurTodo();
     return {
-      todo: "",
-      todolist: []
+      state,
+      addTodo
     };
-  },
-  methods: {
-    addTodo() {
-      this.todolist.push(this.todo);
-      this.todo = "";
-    }
   }
 };
+
+function useOurTodo() {
+  let state = reactive({
+    todo: "",
+    todolist: []
+  });
+
+  function addTodo() {
+    state.todolist.push(state.todo);
+    state.todo = "";
+  }
+  return {
+    state,
+    addTodo
+  };
+}
 </script>
 
 <style lang="sass">
-
 </style>
